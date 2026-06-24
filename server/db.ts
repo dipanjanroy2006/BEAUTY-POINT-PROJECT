@@ -779,6 +779,16 @@ export function getDefaultDB(): DatabaseSchema {
   };
 }
 
+// Helper to check if a database schema has any user-created custom data (products, categories, customers, orders)
+export function hasCustomData(db: DatabaseSchema | null): boolean {
+  if (!db) return false;
+  const hasProducts = Array.isArray(db.products) && db.products.length > 0;
+  const hasCategories = Array.isArray(db.categories) && db.categories.length > 0;
+  const hasCustomers = Array.isArray(db.users) && db.users.some(u => u.role === 'customer');
+  const hasOrders = Array.isArray(db.orders) && db.orders.length > 0;
+  return hasProducts || hasCategories || hasCustomers || hasOrders;
+}
+
 // Initialize database
 export async function initDB() {
   const dir = path.dirname(DB_FILE);
@@ -797,10 +807,10 @@ export async function initDB() {
     }
   }
 
-  // If localDB is missing or has no customer records, construct the default seeded data
-  const hasNoCustomers = !localDB || !localDB.users || localDB.users.filter(u => u.role === 'customer').length === 0;
-  if (hasNoCustomers) {
-    console.log("JSON database is empty or has no customer data. Constructing default seed data...");
+  // If localDB is missing or has no users, construct the default seeded data
+  const hasNoUsers = !localDB || !localDB.users || localDB.users.length === 0;
+  if (hasNoUsers) {
+    console.log("JSON database is empty or missing. Constructing default seed data...");
     localDB = getDefaultDB();
     fs.writeFileSync(DB_FILE, JSON.stringify(localDB, null, 2), 'utf-8');
   }
@@ -811,29 +821,28 @@ export async function initDB() {
     await ensureSchema();
 
     if (mysqlPool) {
-      // Run validation: check if the 'customers' or 'products' tables are empty.
-      // If they are empty (even if the tables exist), re-seed MySQL with the default dataset.
-      const [prodCheck]: any = await mysqlPool.query("SELECT COUNT(*) as count FROM `products` WHERE `deleted_at` IS NULL");
-      const [custCheck]: any = await mysqlPool.query("SELECT COUNT(*) as count FROM `customers` WHERE `deleted_at` IS NULL");
+      const mysqlDB = await loadJsonFromMySQL();
       
-      if (prodCheck[0].count === 0 || custCheck[0].count === 0) {
-        console.log("⚠️ MySQL tables exist but are empty. Automatically seeding MySQL from default dataset...");
-        const defaultDataset = getDefaultDB();
-        await syncJsonToMysql(defaultDataset);
-        console.log("✓ Seeding finished successfully.");
-      }
-    }
+      const localHasCustom = hasCustomData(localDB);
+      const mysqlHasCustom = hasCustomData(mysqlDB);
 
-    const mysqlDB = await loadJsonFromMySQL();
-    if (mysqlDB && mysqlDB.users.filter(u => u.role === 'customer').length > 0) {
-      // Re-write loaded MySQL data back to database.json so the cache is immediately hot
-      fs.writeFileSync(DB_FILE, JSON.stringify(mysqlDB, null, 2), 'utf-8');
-      console.log("✓ JSON local cache successfully loaded/synced with MySQL.");
-    } else {
-      // If MySQL load returned empty (or failed mapping), seed MySQL using the valid localDB
-      if (localDB) {
-        console.log("MySQL data load returned 0 customers. Syncing local JSON cache to MySQL...");
+      if (mysqlHasCustom && mysqlDB) {
+        // MySQL is the source of truth because it has custom data.
+        // Update local database.json cache with MySQL data.
+        fs.writeFileSync(DB_FILE, JSON.stringify(mysqlDB, null, 2), 'utf-8');
+        console.log("✓ JSON local cache successfully loaded/synced from MySQL (MySQL has custom data).");
+      } else if (localHasCustom && localDB) {
+        // MySQL is empty or lacks custom data, but local JSON cache has data.
+        // Sync local JSON to MySQL.
+        console.log("⚠️ MySQL has no custom data, but local JSON has data. Syncing JSON cache to MySQL...");
         await syncJsonToMysql(localDB);
+        console.log("✓ JSON cache successfully synced to MySQL.");
+      } else {
+        // Neither has custom data. Sync default/local DB to MySQL.
+        if (localDB) {
+          console.log("No custom data found in either JSON or MySQL. Syncing default/initial local JSON cache to MySQL...");
+          await syncJsonToMysql(localDB);
+        }
       }
     }
   } catch (err: any) {
