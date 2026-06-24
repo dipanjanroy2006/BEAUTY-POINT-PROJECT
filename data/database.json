@@ -5,14 +5,45 @@
       "username": "LuxeAdmin",
       "email": "admin@beautypoint.com",
       "role": "admin",
-      "createdAt": "2026-06-24T12:56:41.338Z"
+      "createdAt": "2026-06-24T13:09:47.314Z"
     }
   ],
   "passwordHashes": {
-    "usr_admin": "6032037660be09a100c08193724e4ffe:1eeee10097516b441c589d13f6d88d067248d105b865e58018b9d93628853ddfd2aa9fcf6b3fc3adab2b0a217bc7e520ccc3c9c1cd9b2d89ba69cb2f9fc36695"
+    "usr_admin": "6cc0500d508ffeb3c748d77952d3ef5a:420a62a8cd7ea6454753718bfde4bad3009db84473a4445ee51d6bd9d6ab68954f7b1475dd8720a2ef84f325872ef09b3b0c41f77c6e891e0a626f4d5f8e9c3a"
   },
-  "categories": [],
-  "products": [],
+  "categories": [
+    {
+      "id": "cat_1782306620670",
+      "name": "rs5y",
+      "slug": "rs5y",
+      "description": "egsrf",
+      "image": "https://images.unsplash.com/photo-1556228453-efd6c1ff04f6?auto=format&fit=crop&q=80&w=400"
+    }
+  ],
+  "products": [
+    {
+      "id": "prod_1782306647359",
+      "name": "sg",
+      "slug": "sg",
+      "description": "sg",
+      "price": 52,
+      "salePrice": 3,
+      "stock": 12,
+      "categoryId": "cat_1782306620670",
+      "categoryName": "rs5y",
+      "image": "/uploads/image-1782306647352-263911695.jpg",
+      "rating": 5,
+      "reviewsCount": 0,
+      "isFeatured": false,
+      "rewardCoins": 2,
+      "details": {
+        "brand": "sg",
+        "skinType": "All Skin Types",
+        "ingredients": "tgssg",
+        "howToUse": "sgfs"
+      }
+    }
+  ],
   "orders": [],
   "reviews": [],
   "settings": {
