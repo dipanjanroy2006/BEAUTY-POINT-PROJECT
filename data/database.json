@@ -1,0 +1,35 @@
+{
+  "users": [
+    {
+      "id": "usr_admin",
+      "username": "LuxeAdmin",
+      "email": "admin@beautypoint.com",
+      "role": "admin",
+      "createdAt": "2026-06-24T12:56:41.338Z"
+    }
+  ],
+  "passwordHashes": {
+    "usr_admin": "6032037660be09a100c08193724e4ffe:1eeee10097516b441c589d13f6d88d067248d105b865e58018b9d93628853ddfd2aa9fcf6b3fc3adab2b0a217bc7e520ccc3c9c1cd9b2d89ba69cb2f9fc36695"
+  },
+  "categories": [],
+  "products": [],
+  "orders": [],
+  "reviews": [],
+  "settings": {
+    "bannerTitle": "ILLUMINATE YOUR BEAUTY",
+    "bannerSubtitle": "Experience perfect radiance and restore your skin to its natural, glowing beauty with our handpicked collection.",
+    "bannerCtaText": "SHOP THE COLLECTION",
+    "bannerImage": "https://images.unsplash.com/photo-1596462502278-27bfdc403348?auto=format&fit=crop&q=80&w=1200",
+    "announcementText": "✨ COMPLIMENTARY LUXE GIFT BOX ON ORDERS OVER $150 • CODE: LUXEGIFT ✨",
+    "referralEnabled": true,
+    "referralRewardReferrer": 10,
+    "referralRewardReferred": 5,
+    "rewardEnabled": true,
+    "rewardCoinConversionRate": 1,
+    "rewardMaxRedemptionPercent": 50
+  },
+  "rewardWallets": [],
+  "rewardTransactions": [],
+  "referrals": [],
+  "coupons": []
+}

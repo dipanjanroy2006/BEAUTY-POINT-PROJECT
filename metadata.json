@@ -1,0 +1,6 @@
+{
+  "name": "Beauty Point",
+  "description": "A premium, luxury cosmetics and beauty products e-commerce platform with a powerful admin management dashboard.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
