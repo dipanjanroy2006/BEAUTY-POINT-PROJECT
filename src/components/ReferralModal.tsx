@@ -20,7 +20,7 @@ export default function ReferralModal({ isOpen, onClose, user, settings }: Refer
   const refRewardReferrer = settings?.referralRewardReferrer ?? 10;
   const refRewardReferred = settings?.referralRewardReferred ?? 5;
 
-  const shareText = `Invite your friends to Beauty Point and earn rewards. You get ${refRewardReferrer} Coins for every successful referral, and your friend gets ${refRewardReferred} welcome Coins. Join using my link: ${referralLink}`;
+  const shareText = `Invite your friends to Dipanjan_works and earn rewards. You get ${refRewardReferrer} Coins for every successful referral, and your friend gets ${refRewardReferred} welcome Coins. Join using my link: ${referralLink}`;
 
   const handleCopy = () => {
     navigator.clipboard.writeText(referralLink);

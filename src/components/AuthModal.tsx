@@ -88,7 +88,7 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess }: AuthModalP
               <Sparkles className="w-6 h-6" />
             </div>
             <h2 className="font-serif text-2xl font-semibold tracking-wide text-neutral-900">
-              {isLogin ? 'Sign In to Beauty Point' : 'Create Your Luxe Account'}
+              {isLogin ? 'Sign In to Dipanjan_works' : 'Create Your Luxe Account'}
             </h2>
             <p className="mt-1 text-sm text-neutral-500">
               {isLogin ? 'Unlock professional cosmetics recommendations' : 'Join our premium beauty rewards program'}
@@ -210,7 +210,7 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess }: AuthModalP
               }}
               className="text-xs font-medium text-rose-500 hover:text-rose-600 transition-colors focus:outline-none"
             >
-              {isLogin ? "New to Beauty Point? Create an account" : "Already registered? Sign in instead"}
+              {isLogin ? "New to Dipanjan_works? Create an account" : "Already registered? Sign in instead"}
             </button>
           </div>
 

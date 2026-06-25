@@ -740,7 +740,10 @@ export default function App() {
       <footer className="bg-neutral-900 text-neutral-400 text-xs border-t border-neutral-800 py-12 mt-auto print:hidden select-none">
         <div className="max-w-7xl mx-auto px-6 md:px-12 grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
           <div className="space-y-4">
-            <h3 className="font-serif text-white text-lg font-bold tracking-widest">BEAUTY POINT</h3>
+            <div className="flex items-center gap-2">
+              <img src="/logo.png" alt="Dipanjan_works Logo" className="w-8 h-8 rounded-full object-cover" />
+              <h3 className="font-serif text-white text-lg font-bold tracking-wider">Dipanjan_works</h3>
+            </div>
             <p className="text-neutral-500 font-light leading-relaxed">
               Dermatologically validated cosmetics pairing bio-peptides, antioxidants, and cold-pressed floral essential nectars.
             </p>
@@ -776,7 +779,7 @@ export default function App() {
           </div>
         </div>
         <div className="max-w-7xl mx-auto px-6 md:px-12 pt-8 border-t border-neutral-800 text-center text-neutral-500 flex flex-col md:flex-row justify-between items-center gap-2">
-          <p>© 2026 Beauty Point Cosmetics. All Rights Reserved.</p>
+          <p>© 2026 Dipanjan_works. All Rights Reserved.</p>
           <p className="font-mono text-[10px]">EST. 2026 • PREMIUM SKINCARE & COSMETICS</p>
         </div>
       </footer>

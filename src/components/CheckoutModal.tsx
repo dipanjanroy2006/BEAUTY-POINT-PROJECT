@@ -140,7 +140,10 @@ export default function CheckoutModal({ isOpen, onClose, cartItems, user, wallet
               {/* Invoice Brand Header */}
               <div className="flex justify-between items-start border-b border-neutral-200 pb-5 mb-5">
                 <div>
-                  <h1 className="font-serif text-2xl font-bold tracking-wider text-neutral-900">BEAUTY POINT</h1>
+                  <div className="flex items-center gap-2">
+                    <img src="/logo.png" alt="Dipanjan_works Logo" className="w-8 h-8 rounded-full object-cover" />
+                    <h1 className="font-serif text-2xl font-bold tracking-wider text-neutral-900">Dipanjan_works</h1>
+                  </div>
                   <p className="text-[11px] text-neutral-400 font-mono mt-0.5">EST. 2026 • PREMIUM COSMETICS</p>
                 </div>
                 <div className="text-right">

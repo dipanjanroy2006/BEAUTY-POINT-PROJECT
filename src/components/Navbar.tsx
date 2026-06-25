@@ -73,13 +73,16 @@ export default function Navbar({
         </button>
 
         {/* Brand Logo - Centered or Left */}
-        <div className="flex flex-col items-center md:items-start cursor-pointer" onClick={() => onSelectCategory(null)}>
-          <h1 className="font-serif text-xl sm:text-2xl font-bold tracking-widest text-neutral-900 select-none">
-            BEAUTY POINT
-          </h1>
-          <span className="text-[9px] text-neutral-400 font-mono tracking-widest uppercase -mt-0.5 hidden sm:inline-block">
-            EST. 2026 • LUXURY COSMETICS
-          </span>
+        <div className="flex items-center gap-2.5 cursor-pointer" onClick={() => onSelectCategory(null)}>
+          <img src="/logo.png" alt="Dipanjan_works Logo" className="w-9 h-9 rounded-full object-cover border border-rose-200/50 shadow-sm" />
+          <div className="flex flex-col items-start">
+            <h1 className="font-serif text-lg sm:text-xl font-bold tracking-wider text-neutral-900 select-none">
+              Dipanjan_works
+            </h1>
+            <span className="text-[9px] text-neutral-400 font-mono tracking-widest uppercase -mt-0.5 hidden sm:inline-block">
+              EST. 2026 • PREMIUM COLLECTION
+            </span>
+          </div>
         </div>
 
         {/* Center-Left Search Input */}
