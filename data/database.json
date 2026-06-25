@@ -69,7 +69,7 @@
       "description": "A weightless, highly pigmented lipstick that delivers intense color payoff with a velvety matte finish. Formulated with hydrating botanicals to prevent drying, ensuring comfortable, transfer-resistant wear for up to 8 hours.",
       "price": 1200,
       "salePrice": 999,
-      "stock": 150,
+      "stock": 149,
       "categoryId": "cat_1782354563631",
       "categoryName": "Makeup",
       "image": "https://images.unsplash.com/photo-1586495777744-4413f21062fa?auto=format&fit=crop&w=600&q=80",
@@ -372,6 +372,30 @@
     }
   ],
   "orders": [
+    {
+      "id": "ORD-843390",
+      "userId": "usr_1782358042603",
+      "userEmail": "dipanjanroy906@gmail.com",
+      "userName": "Dipanjan Roy",
+      "items": [
+        {
+          "productId": "prod_1782355404573",
+          "name": "Velvet Matte Lipstick",
+          "price": 999,
+          "quantity": 1,
+          "image": "https://images.unsplash.com/photo-1586495777744-4413f21062fa?auto=format&fit=crop&w=600&q=80"
+        }
+      ],
+      "totalAmount": 999,
+      "shippingAddress": "dhdh",
+      "phone": "dhd",
+      "paymentMethod": "PayPal",
+      "paymentStatus": "pending",
+      "orderStatus": "pending",
+      "createdAt": "2026-06-25T04:22:50.874Z",
+      "coinsEarned": 15,
+      "coinsUsed": 0
+    },
     {
       "id": "ORD-243464",
       "userId": "usr_1782358042603",

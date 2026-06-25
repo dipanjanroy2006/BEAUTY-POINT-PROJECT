@@ -463,10 +463,10 @@ export default function App() {
                   <div className="max-w-[62%] space-y-1 text-left z-10">
                     <span className="text-[8px] font-bold tracking-widest text-[#a7704b] uppercase font-mono">Welcome Offer</span>
                     <h3 className="font-serif text-base font-bold text-[#5d3425] leading-tight">
-                      New Collection
+                      {settings?.bannerTitle || 'New Collection'}
                     </h3>
                     <p className="text-[10px] text-[#71412e]/90 font-normal leading-tight">
-                      Discount 50% for the first transaction.
+                      {settings?.bannerSubtitle || 'Discount 50% for the first transaction.'}
                     </p>
                     <div className="pt-2">
                       <button 
@@ -476,13 +476,13 @@ export default function App() {
                         }}
                         className="bg-[#5d3425] hover:bg-[#71412e] text-white text-[10px] font-medium py-1.5 px-4 rounded-full transition-all shadow-xs active:scale-95"
                       >
-                        Shop Now
+                        {settings?.bannerCtaText || 'Shop Now'}
                       </button>
                     </div>
                   </div>
                   <div className="w-[35%] aspect-[4/5] rounded-xl overflow-hidden border border-white/40 shadow-xs bg-neutral-100 shrink-0">
                     <img 
-                      src="https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?auto=format&fit=crop&q=80&w=400" 
+                      src={settings?.bannerImage || 'https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?auto=format&fit=crop&q=80&w=400'} 
                       alt="New Collection Banner Model" 
                       className="w-full h-full object-cover"
                     />
