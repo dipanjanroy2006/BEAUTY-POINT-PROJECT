@@ -15,11 +15,21 @@
       "role": "customer",
       "referralCode": "BP-9OYRJ6",
       "createdAt": "2026-06-25T03:27:22.603Z"
+    },
+    {
+      "id": "usr_1782360325211",
+      "username": "Debanjana Roy",
+      "email": "",
+      "phone": "8965454444",
+      "role": "customer",
+      "referralCode": "BP-2A3UOV",
+      "createdAt": "2026-06-25T04:05:25.211Z"
     }
   ],
   "passwordHashes": {
     "usr_admin": "6cc0500d508ffeb3c748d77952d3ef5a:420a62a8cd7ea6454753718bfde4bad3009db84473a4445ee51d6bd9d6ab68954f7b1475dd8720a2ef84f325872ef09b3b0c41f77c6e891e0a626f4d5f8e9c3a",
-    "usr_1782358042603": "b2254820da8b94d5eafacf6947bfc858:e4b5841995dccfcccd78441757c9cf86edef4705d12928e82a764f3055e6a6ceb329d25c52a40e4d8b9195e45fa47f67fde540f2813d15fd0b005c6d223bdfaf"
+    "usr_1782358042603": "b2254820da8b94d5eafacf6947bfc858:e4b5841995dccfcccd78441757c9cf86edef4705d12928e82a764f3055e6a6ceb329d25c52a40e4d8b9195e45fa47f67fde540f2813d15fd0b005c6d223bdfaf",
+    "usr_1782360325211": "4cfba5032be65eb6b8376d3e678bcce2:f1f24b82256c62c8e3577df020008c5e264fa6808125a9c2276c02be50d62625b12ecfc1ec396a70f3904af077628f930f3f8c5107434dbb38572ca1ac63b579"
   },
   "categories": [
     {
@@ -416,8 +426,13 @@
   "rewardWallets": [
     {
       "customerId": "usr_1782358042603",
-      "balancePoints": 100,
-      "lifetimePointsEarned": 100
+      "balancePoints": 110,
+      "lifetimePointsEarned": 110
+    },
+    {
+      "customerId": "usr_1782360325211",
+      "balancePoints": 5,
+      "lifetimePointsEarned": 5
     }
   ],
   "rewardTransactions": [
@@ -428,8 +443,36 @@
       "transactionType": "earn_purchase",
       "description": "Earned purchase coins for completed order ORD-243464",
       "createdAt": "2026-06-25T03:28:49.518Z"
+    },
+    {
+      "id": "tx_1782360325211_1",
+      "walletId": "usr_1782358042603",
+      "points": 10,
+      "transactionType": "earn_referral",
+      "description": "Referral reward for inviting Debanjana Roy",
+      "createdAt": "2026-06-25T04:05:25.211Z"
+    },
+    {
+      "id": "tx_1782360325211_2",
+      "walletId": "usr_1782360325211",
+      "points": 5,
+      "transactionType": "signup_bonus",
+      "description": "Welcome bonus for signing up using code BP-9OYRJ6",
+      "createdAt": "2026-06-25T04:05:25.211Z"
     }
   ],
-  "referrals": [],
+  "referrals": [
+    {
+      "id": "ref_1782360325211",
+      "referrerId": "usr_1782358042603",
+      "referredId": "usr_1782360325211",
+      "referrerName": "Dipanjan Roy",
+      "referredName": "Debanjana Roy",
+      "referralCode": "BP-9OYRJ6",
+      "status": "completed",
+      "pointsRewarded": 10,
+      "createdAt": "2026-06-25T04:05:25.211Z"
+    }
+  ],
   "coupons": []
 }

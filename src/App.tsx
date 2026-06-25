@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { 
   Star, ShoppingBag, ShieldCheck, Heart, Sparkles, 
-  Trash2, Plus, Minus, ArrowRight, MessageSquare, AlertCircle, X, ChevronRight, CheckCircle2, Gift
+  Trash2, Plus, Minus, ArrowRight, MessageSquare, AlertCircle, X, ChevronRight, CheckCircle2, Gift,
+  Home, ClipboardList, User as UserIcon, Search, Bell, MapPin, SlidersHorizontal, Sliders, LogOut, Check, Coins
 } from 'lucide-react';
 
 // Import Types
@@ -58,6 +59,71 @@ export default function App() {
   // Initial loading states
   const [loading, setLoading] = useState(true);
   const [detailsLoading, setDetailsLoading] = useState(false);
+
+  // Mobile responsive layout states
+  const [isMobile, setIsMobile] = useState(() => typeof window !== 'undefined' ? window.innerWidth <= 768 : false);
+  const [mobileTab, setMobileTab] = useState<'home' | 'wallet' | 'orders' | 'profile'>('home');
+  const [mobileLocation, setMobileLocation] = useState('West Bengal, India');
+  const [mobileOrders, setMobileOrders] = useState<any[]>([]);
+  const [mobileOrdersLoading, setMobileOrdersLoading] = useState(false);
+
+  // Countdown timer for mobile flash sale
+  const [timeLeft, setTimeLeft] = useState({ hours: 2, minutes: 12, seconds: 56 });
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth <= 768);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  useEffect(() => {
+    if (!isMobile) return;
+    const timer = setInterval(() => {
+      setTimeLeft(prev => {
+        if (prev.seconds > 0) {
+          return { ...prev, seconds: prev.seconds - 1 };
+        } else if (prev.minutes > 0) {
+          return { ...prev, minutes: prev.minutes - 1, seconds: 59 };
+        } else if (prev.hours > 0) {
+          return { hours: prev.hours - 1, minutes: 59, seconds: 59 };
+        } else {
+          return { hours: 2, minutes: 12, seconds: 56 };
+        }
+      });
+    }, 1000);
+    return () => clearInterval(timer);
+  }, [isMobile]);
+
+  const fetchMobileOrders = async () => {
+    if (!token) return;
+    try {
+      setMobileOrdersLoading(true);
+      const response = await fetch('/api/orders', {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      if (response.ok) {
+        const data = await response.json();
+        setMobileOrders(data);
+      }
+    } catch (err) {
+      console.error('Failed to fetch mobile orders:', err);
+    } finally {
+      setMobileOrdersLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (isMobile && mobileTab === 'orders' && token) {
+      fetchMobileOrders();
+    }
+  }, [isMobile, mobileTab, token]);
+
+  // Sync wallet points and profile if logged in
+  useEffect(() => {
+    if (token) {
+      fetchUserProfile(token);
+    }
+  }, [token]);
 
   // Fetch product catalog & categories
   const fetchCatalogData = async () => {
@@ -301,6 +367,990 @@ export default function App() {
       setReviewError(err.message);
     }
   };
+
+  if (isMobile) {
+    return (
+      <div className="min-h-screen bg-[#fbf7f0]/60 flex flex-col font-sans pb-28 text-neutral-800">
+        {/* MOBILE HEADER */}
+        <header className="bg-[#fbf7f0]/85 backdrop-blur-md sticky top-0 z-30 border-b border-gold-100/40 px-4 py-3.5 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <MapPin className="w-4 h-4 text-[#5d3425]" />
+            <div className="text-left">
+              <span className="text-[9px] uppercase tracking-wider text-neutral-400 block font-bold">Location</span>
+              <span className="text-xs font-semibold text-neutral-700">{mobileLocation}</span>
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            <button className="p-2 relative rounded-full bg-white text-neutral-600 hover:text-neutral-900 border border-neutral-200/50 shadow-xs">
+              <Bell className="w-4 h-4" />
+              <span className="absolute top-1 right-1 w-2 h-2 bg-rose-500 rounded-full"></span>
+            </button>
+            <div 
+              className="w-8 h-8 rounded-full border border-neutral-200 overflow-hidden cursor-pointer"
+              onClick={() => {
+                if (!token) setIsAuthOpen(true);
+                else setMobileTab('profile');
+              }}
+            >
+              <img src="/logo.png" alt="Profile" className="w-full h-full object-cover" />
+            </div>
+          </div>
+        </header>
+
+        {/* MOBILE BODY CHANGER */}
+        <main className="flex-grow px-4 py-4 overflow-y-auto">
+          {mobileTab === 'home' && (
+            <div className="space-y-5">
+              {/* Search & Quick Filter */}
+              <div className="flex gap-2">
+                <div className="relative flex-1">
+                  <Search className="absolute w-4 h-4 text-neutral-400 left-3.5 top-3.5" />
+                  <input
+                    type="text"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder="Search luxury cosmetics..."
+                    className="w-full py-3 pl-10 pr-4 text-xs bg-white border border-neutral-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#5d3425]/15 focus:border-[#5d3425] transition-all text-neutral-800 text-left"
+                  />
+                  {searchQuery && (
+                    <button 
+                      onClick={() => setSearchQuery('')}
+                      className="absolute p-1 top-2.5 right-3 text-neutral-400 hover:text-neutral-600 rounded-full"
+                    >
+                      <X className="w-3.5 h-3.5" />
+                    </button>
+                  )}
+                </div>
+                <button 
+                  onClick={() => {
+                    const nextSort = sortBy === 'default' ? 'rating' : sortBy === 'rating' ? 'price_asc' : sortBy === 'price_asc' ? 'price_desc' : 'default';
+                    setSortBy(nextSort);
+                  }}
+                  className="w-11 h-11 bg-[#5d3425] text-white flex items-center justify-center rounded-xl shadow-xs hover:bg-[#71412e] active:scale-95 transition-all shrink-0"
+                >
+                  <SlidersHorizontal className="w-4 h-4" />
+                </button>
+              </div>
+
+              {/* Sort Chips */}
+              <div className="flex gap-2 overflow-x-auto no-scrollbar py-0.5">
+                {[
+                  { label: 'All Items', value: 'default' },
+                  { label: 'Top Rated', value: 'rating' },
+                  { label: 'Price: Low-High', value: 'price_asc' },
+                  { label: 'Price: High-Low', value: 'price_desc' }
+                ].map((chip) => {
+                  const isActive = sortBy === chip.value;
+                  return (
+                    <button
+                      key={chip.value}
+                      onClick={() => setSortBy(chip.value)}
+                      className={`px-4 py-2 rounded-full text-[10px] font-medium transition-all shrink-0 border ${
+                        isActive 
+                          ? 'bg-[#5d3425] text-white border-[#5d3425] shadow-xs' 
+                          : 'bg-white text-neutral-600 border-neutral-200 hover:bg-neutral-50'
+                      }`}
+                    >
+                      {chip.label}
+                    </button>
+                  );
+                })}
+              </div>
+
+              {/* No Big Banners - Small Luxury Promo Banner */}
+              {!activeCategory && !searchQuery && (
+                <div className="relative overflow-hidden rounded-[24px] bg-gradient-to-br from-[#f4eae1] to-[#ecdcc3]/70 p-5 flex items-center justify-between border border-[#ecdcc3]/40 shadow-xs">
+                  <div className="max-w-[62%] space-y-1 text-left z-10">
+                    <span className="text-[8px] font-bold tracking-widest text-[#a7704b] uppercase font-mono">Welcome Offer</span>
+                    <h3 className="font-serif text-base font-bold text-[#5d3425] leading-tight">
+                      New Collection
+                    </h3>
+                    <p className="text-[10px] text-[#71412e]/90 font-normal leading-tight">
+                      Discount 50% for the first transaction.
+                    </p>
+                    <div className="pt-2">
+                      <button 
+                        onClick={() => {
+                          const grid = document.getElementById('mobile-products');
+                          if (grid) grid.scrollIntoView({ behavior: 'smooth' });
+                        }}
+                        className="bg-[#5d3425] hover:bg-[#71412e] text-white text-[10px] font-medium py-1.5 px-4 rounded-full transition-all shadow-xs active:scale-95"
+                      >
+                        Shop Now
+                      </button>
+                    </div>
+                  </div>
+                  <div className="w-[35%] aspect-[4/5] rounded-xl overflow-hidden border border-white/40 shadow-xs bg-neutral-100 shrink-0">
+                    <img 
+                      src="https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?auto=format&fit=crop&q=80&w=400" 
+                      alt="New Collection Banner Model" 
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                </div>
+              )}
+
+              {/* Categories Scroll */}
+              <div className="text-left">
+                <div className="flex justify-between items-center mb-3">
+                  <h4 className="text-xs font-bold text-neutral-950 tracking-tight font-serif text-[13px]">Category</h4>
+                  {activeCategory ? (
+                    <button onClick={() => setActiveCategory(null)} className="text-[11px] text-[#8c583b] font-medium">Clear filter</button>
+                  ) : (
+                    <span className="text-[11px] text-[#8c583b] font-semibold">See All</span>
+                  )}
+                </div>
+                <div className="flex gap-4 overflow-x-auto no-scrollbar py-1">
+                  {categories.map((cat) => {
+                    const isActive = activeCategory === cat.slug;
+                    return (
+                      <button
+                        key={cat.id}
+                        onClick={() => setActiveCategory(isActive ? null : cat.slug)}
+                        className="flex flex-col items-center gap-1.5 shrink-0"
+                      >
+                        <div 
+                          className={`w-13 h-13 rounded-full overflow-hidden border flex items-center justify-center transition-all bg-white shadow-xs ${
+                            isActive ? 'border-[#5d3425] ring-2 ring-[#5d3425]/10 scale-105' : 'border-neutral-200/60'
+                          }`}
+                        >
+                          <img src={cat.image} alt={cat.name} className="w-full h-full object-cover" />
+                        </div>
+                        <span className={`text-[10px] font-medium tracking-tight ${isActive ? 'text-[#5d3425] font-semibold' : 'text-neutral-500'}`}>
+                          {cat.name}
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Products List section */}
+              <div id="mobile-products" className="space-y-4">
+                {/* Flash Sale Header with countdown */}
+                <div className="flex justify-between items-center text-left">
+                  <h4 className="text-xs font-bold text-neutral-950 tracking-tight font-serif text-[13px]">
+                    {activeCategory ? categories.find(c => c.slug === activeCategory)?.name : 'Flash Sale'}
+                  </h4>
+                  {!activeCategory && (
+                    <div className="flex items-center gap-1.5 text-xs text-neutral-500 font-medium">
+                      <span className="text-[10px] text-neutral-450 font-normal">Closing in:</span>
+                      <div className="flex items-center gap-1 font-mono">
+                        <span className="bg-[#ecdcc3]/80 text-[#5d3425] px-1.5 py-0.5 rounded text-[11px] font-bold">
+                          {String(timeLeft.hours).padStart(2, '0')}
+                        </span>
+                        <span className="text-neutral-450 font-bold text-[10px]">:</span>
+                        <span className="bg-[#ecdcc3]/80 text-[#5d3425] px-1.5 py-0.5 rounded text-[11px] font-bold">
+                          {String(timeLeft.minutes).padStart(2, '0')}
+                        </span>
+                        <span className="text-neutral-450 font-bold text-[10px]">:</span>
+                        <span className="bg-[#ecdcc3]/80 text-[#5d3425] px-1.5 py-0.5 rounded text-[11px] font-bold">
+                          {String(timeLeft.seconds).padStart(2, '0')}
+                        </span>
+                      </div>
+                    </div>
+                  )}
+                </div>
+                
+                {loading ? (
+                  <div className="flex flex-col items-center justify-center py-12">
+                    <div className="w-8 h-8 border-2 border-[#5d3425] rounded-full border-t-transparent animate-spin mb-2" />
+                    <p className="text-[10px] text-neutral-400 font-mono">Syncing items...</p>
+                  </div>
+                ) : products.length === 0 ? (
+                  <div className="text-center py-10 bg-white border border-dashed border-neutral-200 rounded-2xl p-4">
+                    <p className="text-xs text-neutral-500 font-medium">No items found matching criteria.</p>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-2 gap-3.5">
+                    {products.map((prod) => (
+                      <div 
+                        key={prod.id}
+                        className="bg-white rounded-2xl border border-neutral-200/50 p-2.5 flex flex-col justify-between shadow-xs relative cursor-pointer"
+                        onClick={() => handleViewDetails(prod)}
+                      >
+                        <div className="aspect-square rounded-xl overflow-hidden bg-neutral-50 border border-neutral-100 relative">
+                          <img src={prod.image} alt={prod.name} className="w-full h-full object-cover" />
+                          {prod.salePrice && (
+                            <span className="absolute top-1.5 left-1.5 bg-[#5d3425] text-white text-[8px] font-bold py-0.5 px-1.5 rounded-md">
+                              SALE
+                            </span>
+                          )}
+                        </div>
+                        
+                        <div className="mt-2.5 flex-1 flex flex-col justify-between">
+                          <div className="space-y-0.5 text-left">
+                            <span className="text-[8px] text-neutral-400 font-mono uppercase tracking-wider block">
+                              {prod.details?.brand || 'Collection'}
+                            </span>
+                            <h5 className="text-[11px] font-semibold text-neutral-800 line-clamp-1">
+                              {prod.name}
+                            </h5>
+                          </div>
+                          
+                          <div className="flex justify-between items-center mt-2">
+                            <div className="flex flex-col text-left">
+                              {prod.salePrice ? (
+                                <>
+                                  <span className="text-xs font-mono font-bold text-rose-600">₹{prod.salePrice}</span>
+                                  <span className="text-[9px] font-mono text-neutral-400 line-through">₹{prod.price}</span>
+                                </>
+                              ) : (
+                                <span className="text-xs font-mono font-bold text-neutral-800">₹{prod.price}</span>
+                              )}
+                            </div>
+                            
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleAddToCart(prod);
+                              }}
+                              disabled={prod.stock <= 0}
+                              className="w-7 h-7 rounded-full bg-[#5d3425] text-white flex items-center justify-center shadow-xs active:scale-90 transition-all hover:bg-[#71412e] disabled:opacity-50"
+                            >
+                              <ShoppingBag className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {mobileTab === 'wallet' && (
+            <div className="space-y-6">
+              {!token ? (
+                <div className="text-center py-12 bg-white rounded-3xl p-6 border border-neutral-200/50 shadow-xs space-y-4">
+                  <div className="w-12 h-12 bg-rose-50 rounded-full flex items-center justify-center mx-auto text-rose-500 shadow-inner">
+                    <Gift className="w-6 h-6 animate-pulse" />
+                  </div>
+                  <h3 className="font-serif text-base font-bold text-neutral-800">Rewards Wallet & Referrals</h3>
+                  <p className="text-xs text-neutral-500 max-w-xs mx-auto leading-relaxed">
+                    Join our beauty loyalty club to earn reward coins, track referrals, and redeem points on checkout.
+                  </p>
+                  <button 
+                    onClick={() => setIsAuthOpen(true)}
+                    className="w-full py-3 bg-neutral-900 text-white rounded-xl text-xs font-semibold shadow-md"
+                  >
+                    Sign In / Register
+                  </button>
+                </div>
+              ) : (
+                <div className="space-y-5">
+                  {/* Glossy Wallet Card */}
+                  <div className="bg-gradient-to-br from-amber-800 via-rose-700 to-neutral-900 text-white rounded-3xl p-6 shadow-xl relative overflow-hidden border border-white/10">
+                    <div className="absolute -right-10 -bottom-10 w-36 h-36 bg-white/5 rounded-full blur-2xl"></div>
+                    <div className="absolute right-6 top-6 text-white/20">
+                      <Coins className="w-16 h-16" />
+                    </div>
+                    
+                    <span className="text-[9px] uppercase tracking-widest text-amber-200/70 font-mono font-bold block mb-1 text-left">
+                      Beauty Loyalty Wallet
+                    </span>
+                    <h3 className="font-serif text-lg font-bold truncate text-left">
+                      {user?.username}
+                    </h3>
+                    <p className="text-[10px] font-mono text-white/50 mt-0.5 text-left">Code: {user?.referralCode || 'BP-REFER'}</p>
+                    
+                    <div className="mt-6 flex justify-between items-end">
+                      <div className="text-left">
+                        <span className="text-[9px] text-white/60 block uppercase font-mono tracking-wider">Active Balance</span>
+                        <span className="text-3xl font-serif font-bold text-white leading-none mt-1 inline-block">
+                          {wallet?.balancePoints || 0} <span className="text-sm font-sans font-normal text-amber-300">Coins</span>
+                        </span>
+                      </div>
+                      
+                      <div className="text-right text-[10px] text-white/70 space-y-0.5">
+                        <p>Lifetime Earned: <span className="font-mono font-semibold text-white">{wallet?.lifetimePointsEarned || 0}</span></p>
+                        <p>Lifetime Redeemed: <span className="font-mono font-semibold text-white">{wallet?.lifetimePointsRedeemed || 0}</span></p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Refer & Earn share panel */}
+                  <div className="bg-white rounded-3xl border border-neutral-200/50 p-5 shadow-xs space-y-4 text-left">
+                    <div>
+                      <h4 className="text-xs uppercase font-bold text-neutral-400 tracking-wider">Refer Friends</h4>
+                      <h3 className="text-sm font-bold text-neutral-800 mt-1">Get ₹10 per referral</h3>
+                      <p className="text-[11px] text-neutral-500 mt-1 leading-relaxed">
+                        Share your referral link. You get {settings?.referralRewardReferrer || 10} Coins when they register, and they get {settings?.referralRewardReferred || 5} welcome Coins.
+                      </p>
+                    </div>
+
+                    <div className="flex gap-2">
+                      <input
+                        type="text"
+                        readOnly
+                        value={`${window.location.origin}?ref=${user?.referralCode}`}
+                        className="flex-1 py-2 px-3 bg-neutral-50 border border-neutral-200 rounded-xl text-xs text-neutral-500 font-mono focus:outline-none"
+                      />
+                      <button
+                        onClick={() => {
+                          navigator.clipboard.writeText(`${window.location.origin}?ref=${user?.referralCode}`);
+                          alert('Referral link copied!');
+                        }}
+                        className="bg-neutral-900 text-white rounded-xl text-xs font-semibold px-4 py-2 hover:bg-neutral-800 transition-all active:scale-[0.98]"
+                      >
+                        Copy
+                      </button>
+                    </div>
+
+                    {/* Social icons */}
+                    <div className="flex items-center justify-between gap-2.5 pt-1">
+                      <button 
+                        onClick={() => {
+                          const link = `${window.location.origin}?ref=${user?.referralCode}`;
+                          const text = `Invite your friends to Dipanjan_works and earn rewards. Join using my link: ${link}`;
+                          window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank');
+                        }}
+                        className="flex-1 py-2 bg-emerald-50 border border-emerald-100 hover:bg-emerald-100/55 rounded-xl text-[10px] font-semibold text-emerald-600 flex items-center justify-center gap-1"
+                      >
+                        WhatsApp
+                      </button>
+                      <button 
+                        onClick={() => {
+                          const link = `${window.location.origin}?ref=${user?.referralCode}`;
+                          window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(link)}`, '_blank');
+                        }}
+                        className="flex-1 py-2 bg-indigo-50 border border-indigo-100 hover:bg-indigo-100/55 rounded-xl text-[10px] font-semibold text-indigo-600 flex items-center justify-center gap-1"
+                      >
+                        Facebook
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Transaction ledger list */}
+                  <div className="space-y-3 text-left">
+                    <h4 className="text-xs uppercase font-bold text-neutral-400 tracking-wider">Reward Points Ledger</h4>
+                    <div className="bg-white rounded-2xl border border-neutral-100 p-4 divide-y divide-neutral-100">
+                      <div className="flex justify-between items-center py-2 text-xs">
+                        <div>
+                          <p className="font-semibold text-neutral-800">Welcome Coins</p>
+                          <p className="text-[10px] text-neutral-400">Signup welcome balance</p>
+                        </div>
+                        <span className="font-mono font-bold text-emerald-500">+5 Coins</span>
+                      </div>
+                      {wallet?.lifetimePointsEarned > 5 && (
+                        <div className="flex justify-between items-center py-2 text-xs">
+                          <div>
+                            <p className="font-semibold text-neutral-800">Referral Reward</p>
+                            <p className="text-[10px] text-neutral-400">Affiliate sign up credit</p>
+                          </div>
+                          <span className="font-mono font-bold text-emerald-500">+{wallet.lifetimePointsEarned - 5} Coins</span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+
+          {mobileTab === 'orders' && (
+            <div className="space-y-6">
+              {!token ? (
+                <div className="text-center py-12 bg-white rounded-3xl p-6 border border-neutral-200/50 shadow-xs space-y-4">
+                  <div className="w-12 h-12 bg-rose-50 rounded-full flex items-center justify-center mx-auto text-rose-500 shadow-inner">
+                    <ClipboardList className="w-6 h-6" />
+                  </div>
+                  <h3 className="font-serif text-base font-bold text-neutral-800">Track Packages & History</h3>
+                  <p className="text-xs text-neutral-500 max-w-xs mx-auto leading-relaxed">
+                    Log in to view your complete order history, download invoice details, and track shipment status.
+                  </p>
+                  <button 
+                    onClick={() => setIsAuthOpen(true)}
+                    className="w-full py-3 bg-neutral-950 text-white rounded-xl text-xs font-semibold shadow-md"
+                  >
+                    Sign In / Register
+                  </button>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {/* KPI Row */}
+                  <div className="grid grid-cols-3 gap-2.5">
+                    <div className="bg-white border border-neutral-100 rounded-2xl p-3 text-center">
+                      <span className="text-[9px] uppercase tracking-wider text-neutral-400 font-bold block">Orders</span>
+                      <span className="text-lg font-serif font-bold text-neutral-800 mt-0.5 inline-block">{mobileOrders.length}</span>
+                    </div>
+                    <div className="bg-white border border-neutral-100 rounded-2xl p-3 text-center">
+                      <span className="text-[9px] uppercase tracking-wider text-neutral-400 font-bold block">Active</span>
+                      <span className="text-lg font-serif font-bold text-neutral-800 mt-0.5 inline-block">
+                        {mobileOrders.filter(o => o.orderStatus === 'pending' || o.orderStatus === 'shipped').length}
+                      </span>
+                    </div>
+                    <div className="bg-white border border-neutral-100 rounded-2xl p-3 text-center">
+                      <span className="text-[9px] uppercase tracking-wider text-neutral-400 font-bold block">Delivered</span>
+                      <span className="text-lg font-serif font-bold text-neutral-800 mt-0.5 inline-block">
+                        {mobileOrders.filter(o => o.orderStatus === 'completed').length}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Orders list */}
+                  <div className="space-y-3">
+                    <h4 className="text-xs uppercase font-bold text-neutral-400 tracking-wider text-left">My Packages</h4>
+                    {mobileOrdersLoading ? (
+                      <div className="text-center py-10 text-xs text-neutral-400">Loading order list...</div>
+                    ) : mobileOrders.length === 0 ? (
+                      <div className="text-center py-10 bg-white border border-neutral-200 rounded-2xl p-4">
+                        <p className="text-xs text-neutral-500 font-medium">You haven't placed any orders yet.</p>
+                      </div>
+                    ) : (
+                      <div className="space-y-3">
+                        {mobileOrders.map((order) => (
+                          <div key={order.id} className="bg-white border border-neutral-200/50 rounded-2xl p-4 space-y-3.5 shadow-xs">
+                            <div className="flex justify-between items-start">
+                              <div className="text-left">
+                                <span className="font-mono text-xs font-bold text-neutral-900">ID: #{order.id}</span>
+                                <span className="text-[10px] text-neutral-400 font-mono block">Date: {new Date(order.createdAt).toLocaleDateString()}</span>
+                              </div>
+                              <span className={`text-[10px] font-bold uppercase py-1 px-2.5 rounded-lg font-mono ${
+                                order.orderStatus === 'completed' ? 'bg-emerald-50 text-emerald-600' :
+                                order.orderStatus === 'shipped' ? 'bg-sky-50 text-sky-600' :
+                                order.orderStatus === 'cancelled' ? 'bg-red-50 text-red-600' :
+                                'bg-amber-50 text-amber-600'
+                              }`}>
+                                {order.orderStatus}
+                              </span>
+                            </div>
+
+                            {/* Products summary */}
+                            <div className="flex items-center gap-2 overflow-x-auto no-scrollbar py-0.5">
+                              {order.items.map((it: any, index: number) => (
+                                <div key={index} className="flex items-center gap-1.5 shrink-0 bg-neutral-50 border border-neutral-100 rounded-lg p-1.5">
+                                  <div className="w-8 h-8 rounded-md overflow-hidden bg-white border border-neutral-150">
+                                    <img src={it.image} alt={it.name} className="w-full h-full object-cover" />
+                                  </div>
+                                  <div className="text-left text-[10px]">
+                                    <p className="font-medium text-neutral-800 line-clamp-1 max-w-[80px]">{it.name}</p>
+                                    <p className="font-mono text-neutral-400 font-bold">Qty: {it.quantity}</p>
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+
+                            {/* Mobile visual tracking stepper */}
+                            {order.orderStatus === 'cancelled' ? (
+                              <div className="p-2.5 bg-red-50 rounded-xl border border-red-100 text-center text-xs font-semibold text-red-600">
+                                ❌ Order Cancelled & Refunded
+                              </div>
+                            ) : (
+                              <div className="flex items-center justify-between pt-1 font-sans">
+                                <div className="flex flex-col items-center flex-1">
+                                  <div className="w-5 h-5 rounded-full bg-emerald-500 text-white flex items-center justify-center text-[10px]">✓</div>
+                                  <span className="text-[9px] font-bold text-neutral-800 mt-1">Placed</span>
+                                </div>
+                                <div className={`h-0.5 flex-1 transition-all ${
+                                  order.orderStatus === 'shipped' || order.orderStatus === 'completed' ? 'bg-emerald-500' : 'bg-neutral-200'
+                                }`}></div>
+                                <div className="flex flex-col items-center flex-1">
+                                  <div className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] ${
+                                    order.orderStatus === 'shipped' || order.orderStatus === 'completed' 
+                                      ? 'bg-emerald-500 text-white' 
+                                      : 'bg-neutral-200 text-neutral-400'
+                                  }`}>
+                                    {order.orderStatus === 'shipped' || order.orderStatus === 'completed' ? '✓' : '2'}
+                                  </div>
+                                  <span className={`text-[9px] font-bold mt-1 ${
+                                    order.orderStatus === 'shipped' || order.orderStatus === 'completed' ? 'text-neutral-800' : 'text-neutral-400'
+                                  }`}>Shipped</span>
+                                </div>
+                                <div className={`h-0.5 flex-1 transition-all ${
+                                  order.orderStatus === 'completed' ? 'bg-emerald-500' : 'bg-neutral-200'
+                                }`}></div>
+                                <div className="flex flex-col items-center flex-1">
+                                  <div className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] ${
+                                    order.orderStatus === 'completed' 
+                                      ? 'bg-emerald-500 text-white' 
+                                      : 'bg-neutral-200 text-neutral-400'
+                                  }`}>
+                                    {order.orderStatus === 'completed' ? '✓' : '3'}
+                                  </div>
+                                  <span className={`text-[9px] font-bold mt-1 ${
+                                    order.orderStatus === 'completed' ? 'text-neutral-800 font-bold' : 'text-neutral-400'
+                                  }`}>Delivered</span>
+                                </div>
+                              </div>
+                            )}
+
+                            {/* Subtotal details */}
+                            <div className="flex justify-between items-center border-t border-neutral-100 pt-2.5 text-xs">
+                              <span className="text-neutral-500">Paid: <span className="font-semibold text-neutral-800">{order.paymentMethod}</span></span>
+                              <span className="font-mono font-bold text-neutral-900">Total: ₹{order.totalAmount}</span>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+
+          {mobileTab === 'profile' && (
+            <div className="space-y-6">
+              {!token ? (
+                <div className="text-center py-12 bg-white rounded-3xl p-6 border border-neutral-200/50 shadow-xs space-y-4">
+                  <div className="w-12 h-12 bg-rose-50 rounded-full flex items-center justify-center mx-auto text-rose-500 shadow-inner">
+                    <UserIcon className="w-6 h-6" />
+                  </div>
+                  <h3 className="font-serif text-base font-bold text-neutral-800">My Account</h3>
+                  <p className="text-xs text-neutral-500 max-w-xs mx-auto leading-relaxed">
+                    Log in to configure your user profile details, manage security, and access administrative dashboard hubs.
+                  </p>
+                  <button 
+                    onClick={() => setIsAuthOpen(true)}
+                    className="w-full py-3 bg-neutral-900 text-white rounded-xl text-xs font-semibold shadow-md"
+                  >
+                    Sign In / Register
+                  </button>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {/* Profile Detail card */}
+                  <div className="bg-white border border-neutral-200/50 rounded-3xl p-6 shadow-xs flex flex-col items-center text-center space-y-3">
+                    <div className="w-16 h-16 rounded-full border-2 border-neutral-200 overflow-hidden bg-neutral-50 relative mx-auto">
+                      <img src="/logo.png" alt="Profile" className="w-full h-full object-cover" />
+                    </div>
+                    <div>
+                      <h3 className="font-serif text-base font-bold text-neutral-800">{user?.username}</h3>
+                      <p className="text-xs text-neutral-400 font-mono mt-0.5">{user?.email || user?.phone}</p>
+                      <span className="bg-rose-50 border border-rose-100 text-rose-600 text-[9px] font-bold font-mono py-0.5 px-2 rounded-md uppercase tracking-wider inline-block mt-2">
+                        {user?.role} Account
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Actions List */}
+                  <div className="bg-white border border-neutral-200/50 rounded-3xl p-4 divide-y divide-neutral-100 shadow-xs font-sans text-xs text-left">
+                    {user?.role === 'admin' && (
+                      <button
+                        onClick={() => {
+                          setIsAdminView(!isAdminView);
+                        }}
+                        className="w-full py-3.5 flex justify-between items-center text-left text-neutral-700 hover:text-neutral-900"
+                      >
+                        <span className="font-semibold text-rose-500">Toggle Admin Command Center</span>
+                        <ChevronRight className="w-4 h-4 text-neutral-400" />
+                      </button>
+                    )}
+                    <div className="py-3.5 flex justify-between items-center">
+                      <span className="text-neutral-500">Wallet Balance</span>
+                      <span className="font-mono font-bold text-neutral-800">{wallet?.balancePoints || 0} Coins</span>
+                    </div>
+                    <div className="py-3.5 flex justify-between items-center">
+                      <span className="text-neutral-500">Referral Affiliate Code</span>
+                      <span className="font-mono font-bold text-rose-500 tracking-wider font-bold">{user?.referralCode || 'BP-REFER'}</span>
+                    </div>
+                    <button
+                      onClick={handleLogout}
+                      className="w-full py-3.5 flex justify-between items-center text-left text-red-600 font-semibold"
+                    >
+                      <span>Log Out Account</span>
+                      <LogOut className="w-4 h-4" />
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+        </main>
+
+        {/* FLOATING GLASSMORPHIC BOTTOM TAB MENU */}
+        <nav className="fixed bottom-6 left-1/2 -translate-x-1/2 w-[92%] max-w-sm h-15 glass-nav rounded-full px-5 flex items-center justify-between text-neutral-450 shadow-xl z-40">
+          <button 
+            onClick={() => setMobileTab('home')}
+            className={`flex items-center justify-center p-3 rounded-full transition-all ${
+              mobileTab === 'home' ? 'bg-white text-neutral-950 shadow-md scale-105' : 'text-neutral-400 hover:text-neutral-200'
+            }`}
+          >
+            <Home className="w-5 h-5" />
+          </button>
+          
+          <button 
+            onClick={() => setIsCartOpen(true)}
+            className={`flex items-center justify-center p-3 rounded-full transition-all relative ${
+              isCartOpen ? 'bg-white text-neutral-950 shadow-md scale-105' : 'text-neutral-400 hover:text-neutral-200'
+            }`}
+          >
+            <ShoppingBag className="w-5 h-5" />
+            {cart.length > 0 && (
+              <span className="absolute -top-0.5 -right-0.5 bg-rose-500 text-white text-[8px] font-bold w-4.5 h-4.5 rounded-full flex items-center justify-center border border-neutral-950">
+                {cart.reduce((sum, item) => sum + item.quantity, 0)}
+              </span>
+            )}
+          </button>
+
+          <button 
+            onClick={() => setMobileTab('wallet')}
+            className={`flex items-center justify-center p-3 rounded-full transition-all ${
+              mobileTab === 'wallet' ? 'bg-white text-neutral-950 shadow-md scale-105' : 'text-neutral-400 hover:text-neutral-200'
+            }`}
+          >
+            <Gift className="w-5 h-5" />
+          </button>
+
+          <button 
+            onClick={() => setMobileTab('orders')}
+            className={`flex items-center justify-center p-3 rounded-full transition-all ${
+              mobileTab === 'orders' ? 'bg-white text-neutral-950 shadow-md scale-105' : 'text-neutral-400 hover:text-neutral-200'
+            }`}
+          >
+            <ClipboardList className="w-5 h-5" />
+          </button>
+
+          <button 
+            onClick={() => setMobileTab('profile')}
+            className={`flex items-center justify-center p-3 rounded-full transition-all ${
+              mobileTab === 'profile' ? 'bg-white text-neutral-950 shadow-md scale-105' : 'text-neutral-400 hover:text-neutral-200'
+            }`}
+          >
+            <UserIcon className="w-5 h-5" />
+          </button>
+        </nav>
+
+        {/* MOBILE OVERLAYS & BOTTOM SHEETS */}
+        
+        {/* AuthModal portal */}
+        <AuthModal
+          isOpen={isAuthOpen}
+          onClose={() => setIsAuthOpen(false)}
+          onAuthSuccess={(u, t) => {
+            setUser(u);
+            setToken(t);
+            localStorage.setItem('bp_token', t);
+            localStorage.setItem('bp_user', JSON.stringify(u));
+            fetchUserProfile(t);
+            setIsAuthOpen(false);
+          }}
+        />
+
+        {/* Checkout Modal portal */}
+        {isCheckoutOpen && (
+          <CheckoutModal
+            isOpen={isCheckoutOpen}
+            onClose={() => setIsCheckoutOpen(false)}
+            token={token}
+            user={user}
+            wallet={wallet}
+            cartItems={cart}
+            onOrderPlaced={() => {
+              setCart([]);
+              localStorage.removeItem('bp_cart');
+              fetchUserProfile(token || '');
+              fetchMobileOrders();
+              setMobileTab('orders');
+              setIsCheckoutOpen(false);
+            }}
+            settings={settings}
+          />
+        )}
+
+        {/* Product Details Bottom Sheet */}
+        {selectedProduct && (
+          <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/60 backdrop-blur-xs animate-fade-in">
+            <div 
+              className="absolute inset-0 z-0" 
+              onClick={() => setSelectedProduct(null)}
+            />
+            <div className="relative w-full max-h-[92vh] bg-white rounded-t-[32px] overflow-hidden shadow-2xl z-10 flex flex-col transition-all duration-300 animate-slide-up pb-8 text-neutral-800">
+              {/* Drag/Pull indicator */}
+              <div className="w-12 h-1.5 bg-neutral-200 rounded-full mx-auto my-3 shrink-0"></div>
+
+              {/* Close Button floating */}
+              <button
+                onClick={() => setSelectedProduct(null)}
+                className="absolute p-2.5 top-4 left-4 bg-white/80 backdrop-blur-md rounded-full shadow-sm text-neutral-500 hover:text-neutral-850 z-20 border border-neutral-100/50"
+              >
+                <X className="w-4 h-4" />
+              </button>
+
+              {/* Heart Button floating */}
+              <button
+                className="absolute p-2.5 top-4 right-4 bg-white/80 backdrop-blur-md rounded-full shadow-sm text-neutral-500 hover:text-rose-500 z-20 border border-neutral-100/50 transition-colors"
+                onClick={() => alert('Added to wishlist!')}
+              >
+                <Heart className="w-4 h-4" />
+              </button>
+
+              <div className="flex-1 overflow-y-auto">
+                {detailsLoading ? (
+                  <div className="flex flex-col items-center justify-center py-20 text-center">
+                    <div className="w-8 h-8 border-2 border-[#5d3425] rounded-full border-t-transparent animate-spin mb-3" />
+                    <p className="text-xs text-neutral-400 font-mono">Syncing details...</p>
+                  </div>
+                ) : (
+                  <div className="space-y-5">
+                    {/* Media image container */}
+                    <div className="w-full aspect-[4/3] bg-[#fbf7f0] overflow-hidden relative border-b border-neutral-100/50">
+                      <img src={selectedProduct.image} alt={selectedProduct.name} className="w-full h-full object-cover" />
+                      
+                      {/* Image Thumbnail Overlay from Mockup */}
+                      <div className="absolute bottom-4 left-4 flex gap-1.5 z-20">
+                        <div className="w-9 h-9 rounded-lg overflow-hidden border border-white/50 bg-neutral-100 shadow-sm shrink-0">
+                          <img src={selectedProduct.image} className="w-full h-full object-cover" />
+                        </div>
+                        <div className="w-9 h-9 rounded-lg overflow-hidden border border-white/50 bg-neutral-150 shadow-sm opacity-85 shrink-0">
+                          <img src="https://images.unsplash.com/photo-1512496015851-a90fb38ba796?auto=format&fit=crop&q=80&w=200" className="w-full h-full object-cover" />
+                        </div>
+                        <div className="w-9 h-9 rounded-lg overflow-hidden border border-white/50 bg-neutral-150 shadow-sm opacity-85 shrink-0">
+                          <img src="https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?auto=format&fit=crop&q=80&w=200" className="w-full h-full object-cover" />
+                        </div>
+                        <div className="w-9 h-9 rounded-lg overflow-hidden border border-white/50 bg-neutral-900/60 flex items-center justify-center text-[9px] font-bold text-white shadow-sm shrink-0">
+                          +4
+                        </div>
+                      </div>
+
+                      {settings?.rewardEnabled !== false && selectedProduct.rewardCoins && (
+                        <div className="absolute bottom-4 right-4 bg-amber-950/90 backdrop-blur-md text-amber-200 text-[9px] font-bold font-mono px-3 py-1.5 rounded-xl flex items-center gap-1 border border-amber-500/20 shadow-md">
+                          <Coins className="w-3 h-3 text-amber-300" />
+                          <span>+{selectedProduct.rewardCoins} Coins</span>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Details content */}
+                    <div className="px-5 space-y-4 text-left">
+                      <div className="flex justify-between items-start">
+                        <div className="space-y-1">
+                          <div className="flex items-center gap-2 text-[10px] font-mono font-bold uppercase tracking-wider text-neutral-400">
+                            <span>{selectedProduct.details?.brand || 'Premium Brand'}</span>
+                            <span className="bg-[#ecdcc3]/40 text-[#5d3425] px-1.5 py-0.5 rounded text-[8px] font-semibold">{selectedProduct.categoryName}</span>
+                          </div>
+                          <h2 className="font-serif text-lg font-bold text-neutral-950 leading-snug">
+                            {selectedProduct.name}
+                          </h2>
+                        </div>
+                        <div className="flex items-center gap-1 text-xs text-amber-500 font-semibold bg-amber-50/50 px-2 py-1 rounded-lg border border-amber-100/50 shrink-0">
+                          <Star className="w-3.5 h-3.5 fill-current text-amber-500" />
+                          <span className="font-mono text-neutral-705">{selectedProduct.rating.toFixed(1)}</span>
+                        </div>
+                      </div>
+
+                      {/* Select Size from Mockup */}
+                      <div className="space-y-2 pt-1">
+                        <span className="text-[10px] font-bold text-[#5d3425] uppercase tracking-wider block">Select Size</span>
+                        <div className="flex gap-2">
+                          {['30ml', '50ml', '100ml', '150ml'].map((sz, i) => (
+                            <button
+                              key={sz}
+                              type="button"
+                              onClick={() => alert(`Selected size: ${sz}`)}
+                              className={`px-3.5 py-2 rounded-xl text-xs font-mono font-medium border transition-all ${
+                                i === 1
+                                  ? 'bg-[#5d3425] text-white border-[#5d3425] shadow-xs'
+                                  : 'bg-white text-neutral-600 border-neutral-200 hover:bg-neutral-50'
+                              }`}
+                            >
+                              {sz}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Select Color/Variant from Mockup */}
+                      <div className="space-y-2 pt-1">
+                        <span className="text-[10px] font-bold text-[#5d3425] uppercase tracking-wider block">Select Variant</span>
+                        <div className="flex gap-2.5 items-center">
+                          {['#EAC3B2', '#D38A71', '#BC654B'].map((col, i) => (
+                            <button
+                              key={col}
+                              type="button"
+                              className={`w-6 h-6 rounded-full border-2 transition-all ${
+                                i === 0 ? 'border-[#5d3425] ring-2 ring-[#5d3425]/10 scale-105' : 'border-transparent'
+                              }`}
+                              style={{ backgroundColor: col }}
+                              onClick={() => alert(`Variant selected`)}
+                            />
+                          ))}
+                          <span className="text-xs text-neutral-500 font-medium ml-1">Rose Tinted</span>
+                        </div>
+                      </div>
+
+                      {/* Description Accordions */}
+                      <div className="space-y-3 font-sans text-xs text-neutral-600 leading-relaxed border-t border-neutral-200/50 pt-4">
+                        <div>
+                          <strong className="text-neutral-800 font-bold uppercase tracking-wider text-[9px] block mb-0.5">Product Details</strong>
+                          <p className="font-light text-neutral-500">
+                            {selectedProduct.description} <span className="text-neutral-700 font-semibold underline cursor-pointer">Read more</span>
+                          </p>
+                        </div>
+                        <div>
+                          <strong className="text-neutral-800 font-bold uppercase tracking-wider text-[9px] block mb-0.5">Skin Compatibility</strong>
+                          <p>{selectedProduct.details?.skinType || 'All Skin Types'}</p>
+                        </div>
+                        <div>
+                          <strong className="text-neutral-800 font-bold uppercase tracking-wider text-[9px] block mb-0.5">Ingredients</strong>
+                          <p className="text-[11px] font-light text-neutral-450">{selectedProduct.details?.ingredients || 'Water, cold-pressed essences.'}</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+                {/* Sticky bottom buy bar */}
+                <div className="border-t border-neutral-100/60 p-4 bg-white flex items-center justify-between gap-4 shrink-0 shadow-lg">
+                  <div className="flex flex-col text-left">
+                    <span className="text-[9px] text-neutral-400 uppercase font-bold tracking-wider font-mono">Total Price</span>
+                    <span className="text-base font-mono font-bold text-neutral-900 leading-none mt-0.5">
+                      ₹{selectedProduct.salePrice || selectedProduct.price}
+                    </span>
+                  </div>
+                  
+                  <button
+                    onClick={() => {
+                      handleAddToCart(selectedProduct);
+                      setSelectedProduct(null);
+                    }}
+                    disabled={selectedProduct.stock <= 0}
+                    className="flex-1 py-3.5 bg-[#5d3425] hover:bg-[#71412e] text-white font-semibold text-xs rounded-full flex items-center justify-center gap-1.5 shadow-md active:scale-98 transition-all disabled:opacity-50"
+                  >
+                    <ShoppingBag className="w-4 h-4" />
+                    <span>{selectedProduct.stock <= 0 ? 'Out of Stock' : 'Add to Cart'}</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
+        {/* Cart Drawer Bottom Sheet */}
+        {isCartOpen && (
+          <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/60 backdrop-blur-xs animate-fade-in">
+            <div 
+              className="absolute inset-0 z-0" 
+              onClick={() => setIsCartOpen(false)}
+            />
+            <div className="relative w-full max-h-[85vh] bg-[#fbf7f0] rounded-t-[32px] overflow-hidden shadow-2xl z-10 flex flex-col transition-all duration-300 animate-slide-up pb-8 text-neutral-800">
+              {/* Drag handle */}
+              <div className="w-12 h-1.5 bg-neutral-300/60 rounded-full mx-auto my-3 shrink-0"></div>
+
+              {/* Close Button */}
+              <button
+                onClick={() => setIsCartOpen(false)}
+                className="absolute p-2.5 top-4 right-4 text-neutral-450 hover:text-neutral-600"
+              >
+                <X className="w-5 h-5" />
+              </button>
+
+              <div className="px-5 pb-3 border-b border-gold-100/30 flex justify-between items-center shrink-0">
+                <h3 className="font-serif text-base font-bold text-[#5d3425] flex items-center gap-1">
+                  <span>My Cart</span>
+                  <span className="text-xs font-sans text-neutral-400 font-normal">({cart.reduce((s, it) => s + it.quantity, 0)} items)</span>
+                </h3>
+              </div>
+
+              <div className="flex-1 overflow-y-auto px-5 py-4 divide-y divide-neutral-100/50">
+                {cart.length === 0 ? (
+                  <div className="text-center py-16 space-y-3">
+                    <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center mx-auto text-neutral-400 border border-neutral-100">
+                      <ShoppingBag className="w-6 h-6" />
+                    </div>
+                    <p className="text-xs text-neutral-500 font-medium">Your shopping cart is currently empty.</p>
+                  </div>
+                ) : (
+                  cart.map((item, idx) => (
+                    <div key={idx} className="py-3.5 flex gap-3 items-center text-left">
+                      <div className="w-14 h-14 rounded-xl border border-neutral-200/40 overflow-hidden bg-white shrink-0 shadow-xs">
+                        <img src={item.product.image} alt={item.product.name} className="w-full h-full object-cover" />
+                      </div>
+                      
+                      <div className="flex-1 min-w-0 space-y-0.5">
+                        <h4 className="text-xs font-semibold text-neutral-800 truncate">{item.product.name}</h4>
+                        <p className="text-xs font-mono font-bold text-[#5d3425]">₹{item.product.salePrice || item.product.price}</p>
+                      </div>
+
+                      {/* Quantity Toggles */}
+                      <div className="flex items-center border border-neutral-200/80 rounded-lg p-0.5 bg-white shrink-0 text-xs gap-1.5 shadow-xs">
+                        <button 
+                          onClick={() => handleUpdateQuantity(item.product.id, item.quantity - 1)}
+                          className="w-5 h-5 flex items-center justify-center hover:bg-neutral-100 rounded-md text-neutral-600 transition-colors"
+                        >
+                          <Minus className="w-3 h-3" />
+                        </button>
+                        <span className="font-mono font-bold text-neutral-800 w-4 text-center">{item.quantity}</span>
+                        <button 
+                          onClick={() => handleUpdateQuantity(item.product.id, item.quantity + 1)}
+                          className="w-5 h-5 flex items-center justify-center hover:bg-neutral-100 rounded-md text-neutral-600 transition-colors"
+                        >
+                          <Plus className="w-3 h-3" />
+                        </button>
+                      </div>
+
+                      <button
+                        onClick={() => handleRemoveFromCart(item.product.id)}
+                        className="p-2 text-neutral-400 hover:text-red-500 shrink-0"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
+                  ))
+                )}
+              </div>
+
+              {/* Order total breakdown sticky summary */}
+              {cart.length > 0 && (
+                <div className="border-t border-gold-100/30 p-5 bg-white space-y-4 shrink-0 font-sans text-xs">
+                  {/* Ledger Summary */}
+                  <div className="space-y-2 text-left">
+                    <div className="flex justify-between text-neutral-500">
+                      <span>Sub-total</span>
+                      <span className="font-mono font-semibold text-neutral-850">
+                        ₹{cart.reduce((sum, item) => sum + (item.product.salePrice || item.product.price) * item.quantity, 0)}
+                      </span>
+                    </div>
+                    
+                    <div className="flex justify-between text-neutral-500">
+                      <span>Delivery Fee</span>
+                      <span className="font-mono font-semibold text-neutral-800">
+                        ₹0.00
+                      </span>
+                    </div>
+                    
+                    {settings?.rewardEnabled !== false && (
+                      <div className="flex justify-between text-amber-700 bg-amber-50/50 p-2 rounded-xl border border-amber-100/30">
+                        <span>Earnable loyalty Coins:</span>
+                        <span className="font-mono font-bold flex items-center gap-0.5">
+                          <Coins className="w-3.5 h-3.5 text-amber-500" />
+                          +{cart.reduce((sum, item) => sum + (item.product.rewardCoins || 0) * item.quantity, 0)} Coins
+                        </span>
+                      </div>
+                    )}
+
+                    <div className="border-t border-neutral-150/50 pt-2 flex justify-between text-neutral-900 font-bold text-sm">
+                      <span>Total Price</span>
+                      <span className="font-mono text-[#5d3425]">
+                        ₹{cart.reduce((sum, item) => sum + (item.product.salePrice || item.product.price) * item.quantity, 0)}
+                      </span>
+                    </div>
+                  </div>
+
+                  <button
+                    onClick={() => {
+                      setIsCartOpen(false);
+                      if (!token) {
+                        setIsAuthOpen(true);
+                      } else {
+                        setIsCheckoutOpen(true);
+                      }
+                    }}
+                    className="w-full py-3.5 bg-[#5d3425] hover:bg-[#71412e] text-white font-semibold rounded-full flex items-center justify-center gap-1 shadow-md active:scale-98 transition-all"
+                  >
+                    <span>Checkout</span>
+                    <ArrowRight className="w-4 h-4" />
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-neutral-50 flex flex-col text-neutral-800 font-sans relative">
