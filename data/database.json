@@ -6,53 +6,400 @@
       "email": "admin@beautypoint.com",
       "role": "admin",
       "createdAt": "2026-06-24T13:09:47.314Z"
+    },
+    {
+      "id": "usr_1782358042603",
+      "username": "Dipanjan Roy",
+      "email": "dipanjanroy906@gmail.com",
+      "phone": "8910549235",
+      "role": "customer",
+      "referralCode": "BP-9OYRJ6",
+      "createdAt": "2026-06-25T03:27:22.603Z"
     }
   ],
   "passwordHashes": {
-    "usr_admin": "6cc0500d508ffeb3c748d77952d3ef5a:420a62a8cd7ea6454753718bfde4bad3009db84473a4445ee51d6bd9d6ab68954f7b1475dd8720a2ef84f325872ef09b3b0c41f77c6e891e0a626f4d5f8e9c3a"
+    "usr_admin": "6cc0500d508ffeb3c748d77952d3ef5a:420a62a8cd7ea6454753718bfde4bad3009db84473a4445ee51d6bd9d6ab68954f7b1475dd8720a2ef84f325872ef09b3b0c41f77c6e891e0a626f4d5f8e9c3a",
+    "usr_1782358042603": "b2254820da8b94d5eafacf6947bfc858:e4b5841995dccfcccd78441757c9cf86edef4705d12928e82a764f3055e6a6ceb329d25c52a40e4d8b9195e45fa47f67fde540f2813d15fd0b005c6d223bdfaf"
   },
   "categories": [
     {
-      "id": "cat_1782306620670",
-      "name": "rs5y",
-      "slug": "rs5y",
-      "description": "egsrf",
-      "image": "https://images.unsplash.com/photo-1556228453-efd6c1ff04f6?auto=format&fit=crop&q=80&w=400"
+      "id": "cat_1782354563631",
+      "name": "Makeup",
+      "slug": "makeup",
+      "description": "A comprehensive collection of cosmetics for face, eyes, lips, and nails. This department includes foundations, concealers, eyeshadow palettes, mascaras, lipsticks, and setting sprays designed for everyday wear and professional artistry.",
+      "image": "/uploads/image-1782354563622-421885296.png"
     },
     {
-      "id": "cat_1782308286871",
-      "name": "sfsgss",
-      "slug": "sfsgss",
-      "description": "fsfs",
-      "image": "/uploads/image-1782308286868-415178748.jpg"
+      "id": "cat_1782354752790",
+      "name": "Skincare",
+      "slug": "skincare",
+      "description": "Formulations curated for all skin types and concerns. Features daily essentials and targeted treatments including cleansers, toners, serums, moisturizers, eye creams, face masks, and broad-spectrum sunscreens.",
+      "image": "/uploads/image-1782354752785-135596941.png"
+    },
+    {
+      "id": "cat_1782354910700",
+      "name": "Haircare",
+      "slug": "haircare",
+      "description": "Products dedicated to maintaining healthy hair and effortless styling. Includes cleansing shampoos, hydrating conditioners, deep-conditioning hair masks, scalp treatments, hair dyes, and styling creams or serums.",
+      "image": "/uploads/image-1782354910695-758301284.png"
+    },
+    {
+      "id": "cat_1782355178178",
+      "name": "Fragrance",
+      "slug": "fragrance",
+      "description": "A curated selection of personal scents and aromatic products. Includes luxury perfumes, colognes, body mists, roll-ons, and seasonal fragrance gift sets ranging from floral and fresh to woody and oriental notes.",
+      "image": "/uploads/image-1782355178175-500850988.png"
     }
   ],
   "products": [
     {
-      "id": "prod_1782306647359",
-      "name": "sg",
-      "slug": "sg",
-      "description": "sg",
-      "price": 52,
-      "salePrice": 3,
-      "stock": 12,
-      "categoryId": "cat_1782306620670",
-      "categoryName": "rs5y",
-      "image": "/uploads/image-1782306647352-263911695.jpg",
+      "id": "prod_1782355404573",
+      "name": "Velvet Matte Lipstick",
+      "slug": "velvet-matte-lipstick",
+      "description": "A weightless, highly pigmented lipstick that delivers intense color payoff with a velvety matte finish. Formulated with hydrating botanicals to prevent drying, ensuring comfortable, transfer-resistant wear for up to 8 hours.",
+      "price": 1200,
+      "salePrice": 999,
+      "stock": 150,
+      "categoryId": "cat_1782354563631",
+      "categoryName": "Makeup",
+      "image": "https://images.unsplash.com/photo-1586495777744-4413f21062fa?auto=format&fit=crop&w=600&q=80",
+      "rating": 5,
+      "reviewsCount": 0,
+      "isFeatured": true,
+      "rewardCoins": 15,
+      "details": {
+        "brand": "Maison de Beauté",
+        "skinType": "All Skin Types",
+        "ingredients": "Dimethicone, Isododecane, Synthetic Wax, Jojoba Esters, Vitamin E, Shea Butter, Iron Oxides (CI 77491), Red 7 Lake (CI 15850).",
+        "howToUse": "Define lips with a liner, then apply the lipstick starting from the center of the upper lip moving outward. Repeat on the lower lip."
+      }
+    },
+    {
+      "id": "prod_1782355824108",
+      "name": "HD Liquid Foundation",
+      "slug": "hd-liquid-foundation",
+      "description": "A buildable, oil-free foundation that blends seamlessly into the skin to blur imperfections. Delivers a flawless, natural-matte finish that stands up to sweat and humidity.",
+      "price": 2450,
+      "salePrice": 2100,
+      "stock": 79,
+      "categoryId": "cat_1782354563631",
+      "categoryName": "Makeup",
+      "image": "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?auto=format&fit=crop&w=600&q=80",
+      "rating": 4,
+      "reviewsCount": 1,
+      "isFeatured": false,
+      "rewardCoins": 100,
+      "details": {
+        "brand": "Lumière Cosmetics",
+        "skinType": "Normal, Oily, Combination",
+        "ingredients": "Water, Cyclopentasiloxane, Glycerin, Dimethicone, Silica, Titanium Dioxide, Talc, Phenoxyethanol.",
+        "howToUse": "Shake well. Apply a small amount starting at the center of the face and blend outward using a damp beauty sponge or foundation brush."
+      }
+    },
+    {
+      "id": "prod_1782355921825",
+      "name": "Waterproof Volumizing Mascara",
+      "slug": "waterproof-volumizing-mascara",
+      "description": "An ultra-black, smudge-proof formula featuring an hourglass brush that grips, lifts, and coats every single lash for dramatic volume and length without clumping.",
+      "price": 850,
+      "salePrice": 833,
+      "stock": 200,
+      "categoryId": "cat_1782354563631",
+      "categoryName": "Makeup",
+      "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRqx07SR7krOVoDG_2SfQhQpV4wwkmStxxGIejiYfiY6Q&s",
       "rating": 5,
       "reviewsCount": 0,
       "isFeatured": false,
-      "rewardCoins": 2,
+      "rewardCoins": 35,
       "details": {
-        "brand": "sg",
+        "brand": "Lash Lift Waterproof Mascara",
         "skinType": "All Skin Types",
-        "ingredients": "tgssg",
-        "howToUse": "sgfs"
+        "ingredients": "Isododecane, Cera Alba (Beeswax), Carnauba Wax, Paraffin, Stearic Acid, Carbon Black (CI 77266).",
+        "howToUse": "Sweep the brush from the root to the tip of lashes in a gentle zigzag motion. Apply a second coat before the first coat dries for added volume."
+      }
+    },
+    {
+      "id": "prod_1782356206055",
+      "name": "Translucent Setting Powder",
+      "slug": "translucent-setting-powder",
+      "description": "A micro-milled, weightless loose powder that sets makeup for all-day wear while absorbing excess oil and creating a soft-focus, photo-ready finish without flashback.",
+      "price": 1600,
+      "salePrice": 1450,
+      "stock": 120,
+      "categoryId": "cat_1782354563631",
+      "categoryName": "Makeup",
+      "image": "https://images.unsplash.com/photo-1596462502278-27bfdc403348?auto=format&fit=crop&w=600&q=80",
+      "rating": 5,
+      "reviewsCount": 0,
+      "isFeatured": true,
+      "rewardCoins": 18,
+      "details": {
+        "brand": "Silk & Co.",
+        "skinType": "Oily, Combination, Normal",
+        "ingredients": "Talc, Magnesium Myristate, Nylon-12, Caprylic/Capric Triglyceride, Zinc Oxide, Potassium Sorbate.",
+        "howToUse": "Press a powder puff or fluffy brush into the powder, tap off excess, and gently press onto areas prone to shine (T-zone) or over concealer to bake"
+      }
+    },
+    {
+      "id": "prod_1782356306770",
+      "name": "Bare Horizon Eyeshadow Palette",
+      "slug": "bare-horizon-eyeshadow-palette",
+      "description": "A curated palette containing 12 ultra-blendable neutral shades ranging from soft matte transition tones to high-shine metallic shimmers. Formula features minimal fallout and high color payoff.",
+      "price": 3200,
+      "salePrice": 3000,
+      "stock": 60,
+      "categoryId": "cat_1782354563631",
+      "categoryName": "Makeup",
+      "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTjCDb3rrowdNr_TS0ffbreoU22XA3EakW33eCrVJ9Q9w&s=10",
+      "rating": 5,
+      "reviewsCount": 0,
+      "isFeatured": true,
+      "rewardCoins": 150,
+      "details": {
+        "brand": "Velvet & Vine",
+        "skinType": "All Skin Types",
+        "ingredients": "Mica, Synthetic Fluorphlogopite, Magnesium Stearate, Dimethicone, Ethylhexyl Palmitate, Tin Oxide.",
+        "howToUse": "Apply matte shades with a fluffy blending brush across the crease. Use fingers or a dense flat brush to pack metallic shimmers onto the eyelid."
+      }
+    },
+    {
+      "id": "prod_1782356533207",
+      "name": "Aqua Plump Hyaluronic Acid 2%",
+      "slug": "aqua-plump-hyaluronic-acid-2",
+      "description": "A multi-molecular weight hyaluronic serum that sinks deep into skin layers to lock in moisture, instantly smoothing fine lines and plumping a dehydrated complexion.",
+      "price": 950,
+      "salePrice": 849,
+      "stock": 300,
+      "categoryId": "cat_1782354752790",
+      "categoryName": "Skincare",
+      "image": "https://images.unsplash.com/photo-1612817288484-6f916006741a?auto=format&fit=crop&w=600&q=80",
+      "rating": 5,
+      "reviewsCount": 0,
+      "isFeatured": true,
+      "rewardCoins": 40,
+      "details": {
+        "brand": "Pure Botanicals",
+        "skinType": "Dry, Normal, Dehydrated",
+        "ingredients": "Water, Sodium Hyaluronate, Phenoxyethanol, Ethylhexylglycerin, Panthenol (Vitamin B5).",
+        "howToUse": "Apply 2-3 drops onto damp, clean face and neck. Gently pat into skin before applying your heavier creams or moisturizers."
+      }
+    },
+    {
+      "id": "prod_1782356846076",
+      "name": "Balancing Centella Foaming Cleanser",
+      "slug": "balancing-centella-foaming-cleanser",
+      "description": "A pH-balanced, non-stripping gel cleanser formulated with Centella Asiatica to soothe redness and wash away daily impurities while keeping the skin barrier intact.",
+      "price": 750,
+      "salePrice": 699,
+      "stock": 700,
+      "categoryId": "cat_1782354752790",
+      "categoryName": "Skincare",
+      "image": "https://www.koreanbeauty.nl/cdn/shop/files/MadagascarCentellaAmpouleFoam_1.png?v=1748258663&width=1080",
+      "rating": 5,
+      "reviewsCount": 0,
+      "isFeatured": false,
+      "rewardCoins": 20,
+      "details": {
+        "brand": "DermaCalm",
+        "skinType": "Sensitive, Acne-Prone, All Skin Types",
+        "ingredients": "Water, Coco-Glucoside, Glycerin, Centella Asiatica Extract, Allantoin, Citric Acid, Green Tea Leaf Extract.",
+        "howToUse": "Massage a dime-sized amount onto wet face in circular motions. Rinse thoroughly with lukewarm water and pat dry with a soft towel."
+      }
+    },
+    {
+      "id": "prod_1782357260286",
+      "name": "C-Glow Radiance Cream",
+      "slug": "c-glow-radiance-cream",
+      "description": "A lightweight daily gel-cream moisturizer packed with Vitamin C and Ferulic Acid to visibly fade dark spots, combat free radical damage, and brighten dull skin tone.",
+      "price": 1400,
+      "salePrice": 1199,
+      "stock": 180,
+      "categoryId": "cat_1782354752790",
+      "categoryName": "Skincare",
+      "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS_5iwY4RumnOUcNIXN937FDFaKLWSryZjwz5tPq4QN4A&s=10",
+      "rating": 5,
+      "reviewsCount": 0,
+      "isFeatured": true,
+      "rewardCoins": 44,
+      "details": {
+        "brand": "Glow Labs",
+        "skinType": "Normal, Combination, Dull",
+        "ingredients": "Water, 3-O-Ethyl Ascorbic Acid, Ferulic Acid, Vitamin E, Squalane, Sodium Polyacrylate, Orange Peel Oil.",
+        "howToUse": "Apply evenly over your face and neck every morning as the final step of skincare before sunscreen. Avoid the immediate eye area."
+      }
+    },
+    {
+      "id": "prod_1782357395436",
+      "name": "Youth Renewal 0.5% Retinol Night Cream",
+      "slug": "youth-renewal-0-5-retinol-night-cream",
+      "description": "An advanced overnight treatment featuring encapsulated retinol to stimulate cell turnover and collagen production, minimizing fine lines, wrinkles, and uneven texture.",
+      "price": 1850,
+      "salePrice": 1600,
+      "stock": 90,
+      "categoryId": "cat_1782354752790",
+      "categoryName": "Skincare",
+      "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTbqrN5STf8CT29fWlT9zIFEw9RhnMEcgUboWd-rZP9wQ&s=10",
+      "rating": 5,
+      "reviewsCount": 0,
+      "isFeatured": true,
+      "rewardCoins": 80,
+      "details": {
+        "brand": "Chronos Labs",
+        "skinType": "Mature, Normal, Oily",
+        "ingredients": "Water, Caprylic/Capric Triglyceride, Retinol, Ceramide NP, Shea Butter, Niacinamide, Sodium Acrylate.",
+        "howToUse": "Apply a pea-sized amount to completely dry face at night. Limit initial use to 2 times a week, gradually increasing frequency as tolerated. Use SPF the next day."
+      }
+    },
+    {
+      "id": "prod_1782357524932",
+      "name": "Clean Screen Mineral Sunscreen SPF 50+",
+      "slug": "clean-screen-mineral-sunscreen-spf-50",
+      "description": "A 100% mineral sunscreen providing broad-spectrum UVA/UVB protection. Dries down to a weightless, non-greasy matte finish with zero white cast, serving perfectly as a makeup primer.",
+      "price": 1100,
+      "salePrice": 950,
+      "stock": 566,
+      "categoryId": "cat_1782354752790",
+      "categoryName": "Skincare",
+      "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQjmzXGniUsRiw9XAgszwA7fmYLpewMcq0zB9vrdcolsA&s=10",
+      "rating": 5,
+      "reviewsCount": 0,
+      "isFeatured": true,
+      "rewardCoins": 60,
+      "details": {
+        "brand": "SunShield",
+        "skinType": "Oily, Sensitive, All Skin Types",
+        "ingredients": "Zinc Oxide, Titanium Dioxide, Water, Dimethicone Crosspolymer, Tocopherol (Vitamin E), Aloe Barbadensis Leaf Juice.",
+        "howToUse": "Apply generously and evenly onto your face and neck 15 minutes before sun exposure. Reapply every 2 hours, or immediately after swimming or sweating."
+      }
+    },
+    {
+      "id": "prod_1782357698246",
+      "name": "Moroccan Argan Oil Deep Repair Mask",
+      "slug": "moroccan-argan-oil-deep-repair-mask",
+      "description": "An intensive, deeply conditioning treatment rich in essential fatty acids and Vitamin E designed to revive color-treated, heat-damaged, or over-processed hair.",
+      "price": 1500,
+      "salePrice": 1350,
+      "stock": 140,
+      "categoryId": "cat_1782354910700",
+      "categoryName": "Haircare",
+      "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQQsYTnLWQwAqfBN8ivwq3l3Q7uV2VHyP51bclBT8zC8Q&s=10",
+      "rating": 5,
+      "reviewsCount": 0,
+      "isFeatured": true,
+      "rewardCoins": 65,
+      "details": {
+        "brand": "Nourish Hair Therapy",
+        "skinType": "Dry, Damaged, Curly Hair",
+        "ingredients": "Water, Cetearyn Alcohol, Argania Spinosa (Argan) Kernel Oil, Behentrimonium Chloride, Hydrolyzed Keratin, Dimethicone.",
+        "howToUse": "After shampooing, apply a generous amount from mid-lengths to tips. Leave on for 5 to 10 minutes, then rinse thoroughly with cool water."
+      }
+    },
+    {
+      "id": "prod_1782357801904",
+      "name": "Biotin & Collagen Volumizing Shampoo",
+      "slug": "biotin-collagen-volumizing-shampoo",
+      "description": "A lightweight, sulfate-free formula infused with vitamin B7 biotin and collagen to inject weightless bounce and thickness directly into fine, thinning hair strands.",
+      "price": 890,
+      "salePrice": 300,
+      "stock": 20,
+      "categoryId": "cat_1782354910700",
+      "categoryName": "Haircare",
+      "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTZCPXHIrBtnwTgOsiMhW4ILyAYqR1DIyh13nxCZSLjkQ&s=10",
+      "rating": 5,
+      "reviewsCount": 0,
+      "isFeatured": true,
+      "rewardCoins": 5,
+      "details": {
+        "brand": "Strands & Co.",
+        "skinType": "Fine, Thin, All Scalp Types",
+        "ingredients": "Water, Sodium C14-16 Olefin Sulfonate, Cocamidopropyl Betaine, Biotin, Hydrolyzed Collagen, Polyquaternium-10, Fragrance.",
+        "howToUse": "Apply generously to wet hair, massage into a rich lather from roots to ends, then rinse out thoroughly. Follow with conditioner."
+      }
+    },
+    {
+      "id": "prod_1782357957019",
+      "name": "Rosemary & Mint Scalp Activating Serum",
+      "slug": "rosemary-mint-scalp-activating-serum",
+      "description": "A concentrated, water-based scalp leave-in serum that leverages rosemary leaf oil and peppermint extract to stimulate follicle circulation, improving hair density over time.",
+      "price": 1250,
+      "salePrice": 1100,
+      "stock": 160,
+      "categoryId": "cat_1782354910700",
+      "categoryName": "Haircare",
+      "image": "https://m.media-amazon.com/images/I/71IgzKAJCcL.jpg",
+      "rating": 5,
+      "reviewsCount": 0,
+      "isFeatured": true,
+      "rewardCoins": 100,
+      "details": {
+        "brand": "Root Growth Labs",
+        "skinType": "All scalp Types",
+        "ingredients": "Water, Alcohol Denat., Rosmarinus Officinalis (Rosemary) Leaf Oil, Mentha Piperita (Peppermint) Oil, Caffeine, Niacinamide.",
+        "howToUse": "Apply a few drops directly onto sections of clean scalp once daily. Massage firmly with fingertips. Do not rinse out; style hair as usual."
+      }
+    },
+    {
+      "id": "prod_1782358518406",
+      "name": "Citrus & Amber Eau de Parfum",
+      "slug": "citrus-amber-eau-de-parfum",
+      "description": "A complex signature fragrance featuring top notes of crushed bergamot and Italian lemon, melting down to a warm heart of patchouli, and finishing on a rich, grounding amber base.",
+      "price": 4500,
+      "salePrice": 3999,
+      "stock": 15,
+      "categoryId": "cat_1782355178178",
+      "categoryName": "Fragrance",
+      "image": "https://fraganote.com/cdn/shop/files/4_cd972c99-101b-4ffb-b5c3-69d66e269872.webp?v=1775821222&width=1946",
+      "rating": 5,
+      "reviewsCount": 0,
+      "isFeatured": true,
+      "rewardCoins": 250,
+      "details": {
+        "brand": "Atelier de Parfum",
+        "skinType": "All Skin Types",
+        "ingredients": "Alcohol Denat., Fragrance (Parfum), Water, Limonene, Linalool, Citral, Coumarin, Benzyl Salicylate.",
+        "howToUse": "Spray directly onto pulse points—wrists, inner elbows, and the base of the neck. Allow the scent to air dry naturally without rubbing the skin."
       }
     }
   ],
-  "orders": [],
-  "reviews": [],
+  "orders": [
+    {
+      "id": "ORD-243464",
+      "userId": "usr_1782358042603",
+      "userEmail": "dipanjanroy906@gmail.com",
+      "userName": "Dipanjan Roy",
+      "items": [
+        {
+          "productId": "prod_1782355824108",
+          "name": "HD Liquid Foundation",
+          "price": 2100,
+          "quantity": 1,
+          "image": "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?auto=format&fit=crop&w=600&q=80"
+        }
+      ],
+      "totalAmount": 2100,
+      "shippingAddress": "HYD",
+      "phone": "5444115112",
+      "paymentMethod": "PayPal",
+      "paymentStatus": "paid",
+      "orderStatus": "completed",
+      "createdAt": "2026-06-25T03:27:58.338Z",
+      "coinsEarned": 100,
+      "coinsUsed": 0
+    }
+  ],
+  "reviews": [
+    {
+      "id": "rev_1782358607587",
+      "productId": "prod_1782355824108",
+      "productName": "HD Liquid Foundation",
+      "userId": "usr_1782358042603",
+      "userName": "Dipanjan Roy",
+      "rating": 4,
+      "comment": "GOOD PRODUCT",
+      "isApproved": true,
+      "createdAt": "2026-06-25T03:36:47.587Z"
+    }
+  ],
   "settings": {
     "bannerTitle": "ILLUMINATE YOUR BEAUTY",
     "bannerSubtitle": "Experience perfect radiance and restore your skin to its natural, glowing beauty with our handpicked collection.",
@@ -66,8 +413,23 @@
     "rewardCoinConversionRate": 1,
     "rewardMaxRedemptionPercent": 50
   },
-  "rewardWallets": [],
-  "rewardTransactions": [],
+  "rewardWallets": [
+    {
+      "customerId": "usr_1782358042603",
+      "balancePoints": 100,
+      "lifetimePointsEarned": 100
+    }
+  ],
+  "rewardTransactions": [
+    {
+      "id": "tx_1782358129518_earn",
+      "walletId": "usr_1782358042603",
+      "points": 100,
+      "transactionType": "earn_purchase",
+      "description": "Earned purchase coins for completed order ORD-243464",
+      "createdAt": "2026-06-25T03:28:49.518Z"
+    }
+  ],
   "referrals": [],
   "coupons": []
 }
