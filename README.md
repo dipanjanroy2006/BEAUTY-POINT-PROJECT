@@ -112,6 +112,4 @@ For a detailed verification walkthrough of all features (including CRUD, auth, a
 ---
 
 ## Default Administrator Account
-Use the following credentials to access the Admin Command Hub:
-- **Email:** `admin@beautypoint.com`
-- **Password:** `admin123`
+
