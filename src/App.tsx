@@ -120,7 +120,7 @@ export default function App() {
     const params = new URLSearchParams(window.location.search);
     const refCode = params.get('ref');
     if (refCode) {
-      sessionStorage.setItem('referralCode', refCode);
+      localStorage.setItem('referralCode', refCode);
       // Clean up URL without reload
       const newUrl = window.location.pathname + window.location.hash;
       window.history.replaceState({}, document.title, newUrl);

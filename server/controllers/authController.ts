@@ -57,65 +57,70 @@ export const register = (req: Request, res: Response) => {
       const codeToMatch = referralCode.trim().toUpperCase();
       referrer = db.users.find(u => u.referralCode && u.referralCode === codeToMatch);
       
-      // Make sure referrer exists, and is NOT the registering user (self-referral prevention)
-      if (referrer && referrer.id !== userId) {
-        const refRewardReferrer = db.settings.referralRewardReferrer ?? 10;
-        const refRewardReferred = db.settings.referralRewardReferred ?? 5;
-
-        // Add points to new user's wallet
-        newWallet.balancePoints = refRewardReferred;
-        newWallet.lifetimePointsEarned = refRewardReferred;
-
-        // Add points to referrer's wallet
-        let referrerWallet = db.rewardWallets.find(w => w.customerId === referrer.id);
-        if (!referrerWallet) {
-          referrerWallet = {
-            customerId: referrer.id,
-            balancePoints: 0,
-            lifetimePointsEarned: 0
-          };
-          db.rewardWallets.push(referrerWallet);
-        }
-        referrerWallet.balancePoints += refRewardReferrer;
-        referrerWallet.lifetimePointsEarned += refRewardReferrer;
-
-        // Create referral audit log entry
-        const referralId = 'ref_' + Date.now();
-        const newReferral: Referral = {
-          id: referralId,
-          referrerId: referrer.id,
-          referredId: userId,
-          referrerName: referrer.username,
-          referredName: username,
-          referralCode: codeToMatch,
-          status: 'completed',
-          pointsRewarded: refRewardReferrer,
-          createdAt: new Date().toISOString()
-        };
-        db.referrals.push(newReferral);
-
-        // Create reward transaction records
-        const txReferrerId = 'tx_' + Date.now() + '_1';
-        const txReferredId = 'tx_' + Date.now() + '_2';
-
-        db.rewardTransactions.push({
-          id: txReferrerId,
-          walletId: referrer.id,
-          points: refRewardReferrer,
-          transactionType: 'earn_referral',
-          description: `Referral reward for inviting ${username}`,
-          createdAt: new Date().toISOString()
-        });
-
-        db.rewardTransactions.push({
-          id: txReferredId,
-          walletId: userId,
-          points: refRewardReferred,
-          transactionType: 'signup_bonus',
-          description: `Welcome bonus for signing up using code ${codeToMatch}`,
-          createdAt: new Date().toISOString()
-        });
+      if (!referrer) {
+        return res.status(400).json({ error: 'The referral code you entered is invalid.' });
       }
+      
+      if (referrer.id === userId) {
+        return res.status(400).json({ error: 'You cannot refer yourself.' });
+      }
+
+      const refRewardReferrer = db.settings.referralRewardReferrer ?? 10;
+      const refRewardReferred = db.settings.referralRewardReferred ?? 5;
+
+      // Add points to new user's wallet
+      newWallet.balancePoints = refRewardReferred;
+      newWallet.lifetimePointsEarned = refRewardReferred;
+
+      // Add points to referrer's wallet
+      let referrerWallet = db.rewardWallets.find(w => w.customerId === referrer.id);
+      if (!referrerWallet) {
+        referrerWallet = {
+          customerId: referrer.id,
+          balancePoints: 0,
+          lifetimePointsEarned: 0
+        };
+        db.rewardWallets.push(referrerWallet);
+      }
+      referrerWallet.balancePoints += refRewardReferrer;
+      referrerWallet.lifetimePointsEarned += refRewardReferrer;
+
+      // Create referral audit log entry
+      const referralId = 'ref_' + Date.now();
+      const newReferral: Referral = {
+        id: referralId,
+        referrerId: referrer.id,
+        referredId: userId,
+        referrerName: referrer.username,
+        referredName: username,
+        referralCode: codeToMatch,
+        status: 'completed',
+        pointsRewarded: refRewardReferrer,
+        createdAt: new Date().toISOString()
+      };
+      db.referrals.push(newReferral);
+
+      // Create reward transaction records
+      const txReferrerId = 'tx_' + Date.now() + '_1';
+      const txReferredId = 'tx_' + Date.now() + '_2';
+
+      db.rewardTransactions.push({
+        id: txReferrerId,
+        walletId: referrer.id,
+        points: refRewardReferrer,
+        transactionType: 'earn_referral',
+        description: `Referral reward for inviting ${username}`,
+        createdAt: new Date().toISOString()
+      });
+
+      db.rewardTransactions.push({
+        id: txReferredId,
+        walletId: userId,
+        points: refRewardReferred,
+        transactionType: 'signup_bonus',
+        description: `Welcome bonus for signing up using code ${codeToMatch}`,
+        createdAt: new Date().toISOString()
+      });
     }
 
     // Hash and store password

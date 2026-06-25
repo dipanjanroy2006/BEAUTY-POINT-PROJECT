@@ -18,6 +18,9 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess }: AuthModalP
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [manualReferralCode, setManualReferralCode] = useState(() => {
+    return localStorage.getItem('referralCode') || '';
+  });
 
   if (!isOpen) return null;
 
@@ -28,10 +31,9 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess }: AuthModalP
     setLoading(true);
 
     const endpoint = isLogin ? '/api/auth/login' : '/api/auth/register';
-    const referralCode = !isLogin ? (sessionStorage.getItem('referralCode') || undefined) : undefined;
     const body = isLogin 
       ? { email, password } 
-      : { username, email, phone, password, referralCode };
+      : { username, email, phone, password, referralCode: manualReferralCode || undefined };
 
     try {
       const response = await fetch(endpoint, {
@@ -46,6 +48,10 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess }: AuthModalP
         throw new Error(data.error || 'Something went wrong.');
       }
 
+      if (!isLogin) {
+        localStorage.removeItem('referralCode');
+      }
+
       setSuccess(isLogin ? 'Welcome back!' : 'Account registered successfully!');
       setTimeout(() => {
         onAuthSuccess(data.user, data.token);
@@ -55,6 +61,7 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess }: AuthModalP
         setEmail('');
         setPhone('');
         setPassword('');
+        setManualReferralCode('');
       }, 800);
 
     } catch (err: any) {
@@ -163,6 +170,22 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess }: AuthModalP
                 />
               </div>
             </div>
+
+            {!isLogin && (
+              <div>
+                <label className="block mb-1 text-xs font-medium tracking-wide uppercase text-neutral-600">Referral Code (Optional)</label>
+                <div className="relative">
+                  <Sparkles className="absolute w-4 h-4 text-neutral-400 left-3 top-3.5" />
+                  <input
+                    type="text"
+                    value={manualReferralCode}
+                    onChange={(e) => setManualReferralCode(e.target.value)}
+                    placeholder="E.g., BP-XXXXXX"
+                    className="w-full py-3.5 pl-10 pr-4 text-sm bg-neutral-50 border border-neutral-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-rose-400/20 focus:border-rose-400 transition-all text-neutral-800"
+                  />
+                </div>
+              </div>
+            )}
 
             <div>
               <label className="block mb-1 text-xs font-medium tracking-wide uppercase text-neutral-600">Password</label>
